@@ -1,23 +1,73 @@
-import logo from './logo.svg';
 import './App.css';
+import {useState, useEffect} from 'react';
+
+//importing components
+import Header from './components/Header'
+import Form from './components/Form'
+import TodoList from './components/TodoList'
 
 function App() {
+  
+  const apiUrl = 'http://localhost:52971/api/todo';
+
+  //States
+  const [inputText, setInputText] = useState("")
+  const [todos, setTodos] = useState([])
+  const [status, setStatus] = useState("all");
+  const [filteredList, setFilteredList] = useState([])
+  const [isEditing, setIsEditing] = useState(null)
+
+  //Effects
+  useEffect(() => {
+    const result = fetch(apiUrl)
+                    .then(res => {
+                        return res.json();
+                    }).then(r => {
+                     setTodos(r)
+                    })
+  },[])
+
+  useEffect(() => {
+    filterHandler()
+  },[todos,status])
+
+  useEffect(() =>{
+    removeIsEditing()
+  },[todos,status,inputText])
+
+  //Functions
+  const filterHandler = () => {
+    switch(status){
+      case "completed":
+        setFilteredList(todos.filter(todo => todo.completed === true))
+        break;
+      case "uncompleted":
+        setFilteredList(todos.filter(todo => todo.completed === false))
+        break;
+      default:
+        setFilteredList(todos);
+        break;
+    }
+  }
+
+  const removeIsEditing = () =>{
+    setIsEditing(null);
+  }
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <Header />
+
+      <Form inputText={inputText} setInputText={setInputText} 
+      todos={todos} setTodos={setTodos}
+      setStatus={setStatus}
+      apiUrl={apiUrl}
+      />
+      <TodoList setTodos={setTodos} todos={todos}
+       filteredList={filteredList}
+       isEditing={isEditing} setIsEditing={setIsEditing}
+       apiUrl = {apiUrl} 
+       />
     </div>
   );
 }
