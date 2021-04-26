@@ -4,8 +4,6 @@ const Todo = (props) => {
     
     const [editInputText, setEditInputText] = useState("");
 
-    
-
     useEffect(() => {
         changeEditInputState()
     },[props.isEditing])
@@ -19,7 +17,9 @@ const Todo = (props) => {
             'Content-Type': 'application/json'
           })
         }
-        return fetch(props.apiUrl, options)
+        fetch(props.apiUrl, options)
+
+        return props.fetchRefresh()
     }
 
     const deleteHandler = () =>{

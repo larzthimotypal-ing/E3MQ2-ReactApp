@@ -16,16 +16,25 @@ function App() {
   const [status, setStatus] = useState("all");
   const [filteredList, setFilteredList] = useState([])
   const [isEditing, setIsEditing] = useState(null)
+  const [isGetting, setIsGetting] = useState(true)
+  const [isRefreshed, setIsRefreshed] = useState(false)
 
   //Effects
+
   useEffect(() => {
-    const result = fetch(apiUrl)
-                    .then(res => {
-                        return res.json();
-                    }).then(r => {
-                     setTodos(r)
-                    })
-  },[])
+    
+    if(isRefreshed === false)
+    {
+      fetch(apiUrl).then(res => {
+        return res.json();
+      }).then(r => {
+        setTodos(r)
+      })
+
+
+    }
+    
+  },[isGetting])
 
   useEffect(() => {
     filterHandler()
@@ -54,19 +63,29 @@ function App() {
     setIsEditing(null);
   }
 
+  const fetchRefresh = () => {
+    setIsRefreshed(false)
+    setIsGetting(true)
+    setIsRefreshed(true)
+    setIsGetting(false)
+    
+  }
+
   return (
     <div className="App">
       <Header />
-
+      
       <Form inputText={inputText} setInputText={setInputText} 
       todos={todos} setTodos={setTodos}
       setStatus={setStatus}
       apiUrl={apiUrl}
+      fetchRefresh={fetchRefresh}
       />
       <TodoList setTodos={setTodos} todos={todos}
        filteredList={filteredList}
        isEditing={isEditing} setIsEditing={setIsEditing}
        apiUrl = {apiUrl} 
+       fetchRefresh={fetchRefresh}
        />
     </div>
   );

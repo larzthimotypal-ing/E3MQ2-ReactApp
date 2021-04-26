@@ -14,15 +14,27 @@ body {
 }
 header {
   font-size: 2rem;
+  min-height: 20vh;
 }
 
 header,
 .add-form {
-  min-height: 20vh;
   display: flex;
   justify-content: center;
   align-items: center;
 }
+.add-form{
+  width: 800px;
+  margin: auto;
+}
+
+.error-message{
+  display: flex;
+  color: rgb(240, 32, 32);
+  width: 670px;
+  margin: auto;
+}
+
 form input,
 form .todo-button {
   padding: 0.5rem;
@@ -40,12 +52,19 @@ form .todo-button:hover {
   background: #a88beb;
   color: white;
 }
+
 .todo-container {
   display: flex;
   justify-content: center;
   align-items: center;
+  text-align: center;
   width: 500px;
   margin: auto;
+  flex-direction: column;
+}
+
+.todo-container h2{
+  margin: 2rem 0;
 }
 
 .todo-list {
